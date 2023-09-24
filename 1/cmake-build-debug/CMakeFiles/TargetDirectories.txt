@@ -1,0 +1,3 @@
+C:/Users/Andre/Documents/GitHub/SiaodMirea/cmake-build-debug/CMakeFiles/SiaodMirea.dir
+C:/Users/Andre/Documents/GitHub/SiaodMirea/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Andre/Documents/GitHub/SiaodMirea/cmake-build-debug/CMakeFiles/rebuild_cache.dir
