@@ -21,13 +21,15 @@ int getRegNum() {
 }
 
 string createFile() {
-    string nameCompany = "OchenBezopasno";
+    string nameCompany = "OchenBezopasn ";
     int regNum;
     string nameFile = "file";
 
     ofstream writeFile;
+
     writeFile.open(nameFile + ".txt", ios::trunc);
     writeFile.close();
+
     writeFile.open(nameFile + ".txt", ios::app);
 
     if (!writeFile) {
@@ -35,9 +37,9 @@ string createFile() {
         return "";
     }
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10000; i++) {
         regNum = getRegNum();
-        writeFile << nameCompany << " " << regNum << endl;
+        writeFile << nameCompany << regNum << endl;
     }
 
     writeFile.close();
@@ -47,7 +49,7 @@ string createFile() {
 void updateToBinaryFile(string nameFile) {
 
     struct book {
-        char nameCompany[20];
+        char nameCompany[14];
         int regNum;
     };
 
@@ -56,6 +58,7 @@ void updateToBinaryFile(string nameFile) {
 
     ofstream writeFile1(nameFile + ".bin", ios::trunc);
     writeFile1.close();
+
     ofstream writeFile(nameFile + ".bin", ios::in | ios::binary | ios::app);
 
     if (!readFile.is_open()) {
@@ -72,10 +75,12 @@ void updateToBinaryFile(string nameFile) {
         string line;
         getline(readFile, line);
 
+        //—читывание с txt файла и запись в bin
         //---------------------------------------------------------
         string array[2];
         stringstream ss(line);
         string token;
+        if (line.empty()) break;
 
         int index = 0;
         while (getline(ss, token, ' ')) {
@@ -86,8 +91,8 @@ void updateToBinaryFile(string nameFile) {
 
         string nameCompany = array[0];
 
-        char nameCompanyCharArray[20];
-        copy(nameCompany.begin(), nameCompany.begin() + 20, nameCompanyCharArray);
+        char nameCompanyCharArray[14];
+        copy(nameCompany.begin(), nameCompany.begin() + 14, nameCompanyCharArray);
 
         int regNum;
         if (!array[1].empty()) regNum = stoi(array[1]);
@@ -95,10 +100,9 @@ void updateToBinaryFile(string nameFile) {
 
         book X;
         X.regNum = regNum;
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 14; i++) {
             X.nameCompany[i] = nameCompanyCharArray[i];
         }
-        X.nameCompany[19] = ' ';
 
         writeFile.write((char *) &X, sizeof(book));
         writeFile << endl;
