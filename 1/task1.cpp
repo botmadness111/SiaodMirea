@@ -37,9 +37,9 @@ string createFile() {
         return "";
     }
 
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 1000000; i < 1009999; i++) {
         regNum = getRegNum();
-        writeFile << nameCompany << endl << regNum << endl;
+        writeFile << nameCompany << endl << i << endl;
     }
 
     writeFile.close();
@@ -77,19 +77,6 @@ void updateToBinaryFile(string nameFile) {
         getline(readFile, nameCompany);
         getline(readFile, regNumStr);
 
-        //—читывание с txt файла и запись в bin
-        //---------------------------------------------------------
-//        string array[2];
-//        stringstream ss(line);
-//        string token;
-//        if (line.empty()) continue;
-//
-//        int index = 0;
-//        while (getline(ss, token, ' ')) {
-//            array[index] = token;
-//            index++;
-//        }
-
         //---------------------------------------------------------
 
         //string nameCompany = array[0];
@@ -108,10 +95,7 @@ void updateToBinaryFile(string nameFile) {
             X.nameCompany[i] = nameCompanyCharArray[i];
         }
 
-        //writeFile.write((char *) &X, sizeof(book));
-
         writeFile.write((char *) &X, sizeof(book));
-        //writeFile << endl;
 
 
     }

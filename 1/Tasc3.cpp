@@ -2,6 +2,7 @@
 #include <fstream>
 #include <ostream>
 #include <random>
+#include <chrono>
 
 
 using namespace std;
@@ -17,10 +18,8 @@ struct bangBang {
 };
 
 vector<bangBang> createMap(string nameFile) {
-
-
     // считывание с файла
-    ifstream readFile(nameFile + ".bin", ios::in);
+    ifstream readFile(nameFile + ".bin", ios::binary);
     vector<bangBang> array;
     book X;
     int i = 0;
@@ -44,23 +43,68 @@ vector<bangBang> createMap(string nameFile) {
 
         i++;
     }
+    readFile.close();
     return array;
 }
 
 
-void binaryFind(vector<bangBang> array, int find) {
-    
+int binaryFind(vector<bangBang> arraySorted, int find) {
 
-    int right = array.size() - 1;
+
+    int right = arraySorted.size() - 1;
     int left = 0;
 
-    int mid = left + ((find - sortedArray[left]) * (right - left)) / (sortedArray[right] - sortedArray[left]);
+    while (arraySorted[left].regNum <= find && arraySorted[right].regNum >= find && left <= right) {
 
+        if (arraySorted[left].regNum == arraySorted[right].regNum) break; // зашита от деления на 0
+
+        int mid = left + ((find - arraySorted[left].regNum) * (right - left)) /
+                         (arraySorted[right].regNum - arraySorted[left].regNum);
+
+        if (arraySorted[mid].regNum == find) return arraySorted[mid].offset;
+
+        if (arraySorted[mid].regNum > find) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}
+
+string getName(string nameFile, int offset) {
+    string result = "";
+
+    book X;
+    ifstream readFile(nameFile + ".bin", ios::binary);
+    readFile.seekg(offset);
+    readFile.read((char *) &X, sizeof(book));
+    for (auto chr: X.nameCompany){
+        result += chr;
+    }
+    readFile.close();
+    return result;
 }
 
 
 int main() {
+    setlocale(LC_ALL, "Russian");
+
     vector<bangBang> array = createMap("file");
+
+    // Начало измерения времени
+    auto startTime = std::chrono::high_resolution_clock::now();
+
+    int offset = binaryFind(array, 1009990);
+    cout << offset << endl;
+
+    // Конец измерения времени
+    auto endTime = std::chrono::high_resolution_clock::now();
+
+    // Вычисление длительности выполнения программы в миллисекундах
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+
+    // Вывод длительности выполнения программы
+    std::cout << "time  " << duration.count() << " ms" << std::endl;
+
+    cout << getName("file", offset);
 
     return 0;
 }
