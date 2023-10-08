@@ -40,17 +40,17 @@ int main() {
     // Начало измерения времени
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    bool isFind = find("file", 1009990);
+    bool isFind = find("file", 1000990);
     cout << isFind << endl;
 
     // Конец измерения времени
     auto endTime = std::chrono::high_resolution_clock::now();
 
     // Вычисление длительности выполнения программы в миллисекундах
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds >(endTime - startTime);
 
     // Вывод длительности выполнения программы
-    std::cout << "Время выполнения: " << duration.count() << " мс" << std::endl;
+    std::cout << "Время выполнения: " << duration.count() << " микроС" << std::endl;
 
     return 0;
 }

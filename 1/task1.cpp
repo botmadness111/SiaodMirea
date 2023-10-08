@@ -37,7 +37,7 @@ string createFile() {
         return "";
     }
 
-    for (int i = 1000000; i < 1009999; i++) {
+    for (int i = 1000000; i < 1000999; i++) {
         regNum = getRegNum();
         writeFile << nameCompany << endl << i << endl;
     }
