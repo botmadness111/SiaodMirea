@@ -92,17 +92,17 @@ int main() {
     // Начало измерения времени
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    int offset = binaryFind(array, 1009990);
+    int offset = binaryFind(array, 1000992);
     cout << offset << endl;
 
     // Конец измерения времени
     auto endTime = std::chrono::high_resolution_clock::now();
 
     // Вычисление длительности выполнения программы в миллисекундах
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
 
     // Вывод длительности выполнения программы
-    std::cout << "time  " << duration.count() << " ms" << std::endl;
+    std::cout << "time  " << duration.count() << " micros" << std::endl;
 
     cout << getName("file", offset);
 
