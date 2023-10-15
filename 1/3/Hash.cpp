@@ -2,7 +2,6 @@
 // Created by Andre on 08.10.2023.
 //
 
-#include "Hash.h"
 #include "iostream"
 #include "HashTable.cpp"
 

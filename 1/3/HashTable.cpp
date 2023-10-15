@@ -33,6 +33,8 @@ public:
 
     void put(string &key, string &val) {
 
+        if (get(key) != "") return;
+
         int hashCode = getHashCode(key);
 
         string isInclude = hashTable[hashCode]; //проверим свободна ли €чейка
