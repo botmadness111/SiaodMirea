@@ -2,11 +2,11 @@
 // Created by Andre on 08.10.2023.
 //
 
-#include "Hash.h"
 #include "iostream"
 #include "HashTable.cpp"
 #include <ostream>
 #include <fstream>
+#include <chrono>
 
 using namespace std;
 
@@ -39,7 +39,7 @@ void updateToBinaryFile() {
 
         if (record.empty()) continue;
 
-        cout << record << endl;
+//        cout << record << endl;
 
 
         writeFile.write((char *) &record, sizeof(record));
@@ -54,10 +54,8 @@ void updateToBinaryFile() {
 
 int main() {
 
-    setlocale(LC_ALL, "Russian");
 
     updateToBinaryFile();
-    exit(0);
 
     setlocale(LC_ALL, "Russian");
 
@@ -75,7 +73,19 @@ int main() {
 
     key = "Коля";
     val = "Kolya";
+
+    // Начало измерения времени
+    auto startTime = std::chrono::high_resolution_clock::now();
+
     map.put(key, val);
+
+    // Конец измерения времени
+    auto endTime = std::chrono::high_resolution_clock::now();
+    // Вычисление длительности выполнения программы в миллисекундах
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+
+    // Вывод длительности выполнения программы
+    std::cout << "Время выполнения: " << duration.count() << " микроС" << std::endl;
 
     key = "Саня";
     val = "Sanya";
@@ -95,9 +105,22 @@ int main() {
 
     cout << "------------" << endl;
     key = "Вася";
+
+
+    startTime = std::chrono::high_resolution_clock::now();
+
     map.remove(key);
     key = "ляО";
     map.remove(key);
+
+    // Конец измерения времени
+    endTime = std::chrono::high_resolution_clock::now();
+    // Вычисление длительности выполнения программы в миллисекундах
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+
+    // Вывод длительности выполнения программы
+    std::cout << "Время выполнения: " << duration.count() << " микроС" << std::endl;
+
     map.print();
 
 

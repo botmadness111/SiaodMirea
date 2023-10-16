@@ -8,7 +8,7 @@
 using namespace std;
 
 class HashTable {
-
+private:
     int size;
     string *hashTable;
     string *hashTableKeys;
@@ -32,6 +32,8 @@ public:
     }
 
     void put(string &key, string &val) {
+
+        if (get(key) != "") return;
 
         int hashCode = getHashCode(key);
 
