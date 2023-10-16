@@ -35,7 +35,7 @@ public:
 
         int hashCode = getHashCode(key);
 
-        string isInclude = hashTable[hashCode]; //проверим свободна ли €чейка
+        string isInclude = hashTable[hashCode]; //???????? ???????? ?? ??????
         if (isInclude.empty() || isInclude == "*") {
             this->hashTable[hashCode] = val;
             this->hashTableKeys[hashCode] = key;
@@ -44,7 +44,7 @@ public:
         } else {
             int start = hashCode;
             hashCode = (hashCode + 1) % this->size;
-            while (hashCode != start) { //ищем первую попавшуюс€-свободную €чейку
+            while (hashCode != start) { //???? ?????? ??????????-????????? ??????
                 isInclude = this->hashTable[hashCode];
                 if (isInclude.empty() || isInclude == "*") {
                     this->hashTable[hashCode] = val;
@@ -56,21 +56,21 @@ public:
                 hashCode = (hashCode + 1) % this->size;
             }
         }
-        if (double(this->cnt) / double(this->size) >= 0.75) { //рехеширование
+        if (double(this->cnt) / double(this->size) >= 0.75) { //?????????????
             rehesh();
         }
     }
 
     string get(string &key) {
         int hashCode = getHashCode(key);
-        if (this->hashTableKeys[hashCode] == key) return this->hashTable[hashCode]; // если нашли
+        if (this->hashTableKeys[hashCode] == key) return this->hashTable[hashCode]; // ???? ?????
 
         int start = hashCode;
 
         hashCode = (hashCode + 1) % this->size;
-        while (start != hashCode) { //обходим всю мапу
-            if (this->hashTableKeys[hashCode].empty()) return ""; //если пустой, значит правее уже ничего не будет
-            if (this->hashTableKeys[hashCode] == key) return this->hashTable[hashCode]; // если нашли
+        while (start != hashCode) { //??????? ??? ????
+            if (this->hashTableKeys[hashCode].empty()) return ""; //???? ??????, ?????? ?????? ??? ?????? ?? ?????
+            if (this->hashTableKeys[hashCode] == key) return this->hashTable[hashCode]; // ???? ?????
 
             hashCode = (hashCode + 1) % this->size;
         }
@@ -81,7 +81,7 @@ public:
 
     void remove(string &key) {
         int hashCode = getHashCode(key);
-        if (this->hashTableKeys[hashCode] == key) { // если нашли
+        if (this->hashTableKeys[hashCode] == key) { // ???? ?????
             this->hashTable[hashCode] = "*";
             this->hashTableKeys[hashCode] = "";
             this->cnt--;
@@ -91,10 +91,10 @@ public:
         int start = hashCode;
 
         hashCode = (hashCode + 1) % this->size;
-        while (start != hashCode) { //обходим всю мапу
-            if (this->hashTableKeys[hashCode].empty()) return; //если пустой, значит правее уже ничего не будет
+        while (start != hashCode) { //??????? ??? ????
+            if (this->hashTableKeys[hashCode].empty()) return; //???? ??????, ?????? ?????? ??? ?????? ?? ?????
             if (this->hashTableKeys[hashCode] == key) {
-                this->hashTable[hashCode] = "*"; // если нашли
+                this->hashTable[hashCode] = "*"; // ???? ?????
                 this->hashTableKeys[hashCode] = "";
                 this->cnt--;
                 return;
@@ -138,14 +138,14 @@ private:
 
     string get(string *&hashTable, string *&hashTableKeys, string &key) {
         int hashCode = getHashCode(key, this->size / 2);
-        if (hashTableKeys[hashCode] == key) return hashTable[hashCode]; // если нашли
+        if (hashTableKeys[hashCode] == key) return hashTable[hashCode]; // ???? ?????
 
         int start = hashCode;
 
         hashCode = (hashCode + 1) % (this->size / 2);
-        while (start != hashCode) { //обходим всю мапу
-            if (hashTableKeys[hashCode].empty()) return ""; //если пустой, значит правее уже ничего не будет
-            if (hashTableKeys[hashCode] == key) return hashTable[hashCode]; // если нашли
+        while (start != hashCode) { //??????? ??? ????
+            if (hashTableKeys[hashCode].empty()) return ""; //???? ??????, ?????? ?????? ??? ?????? ?? ?????
+            if (hashTableKeys[hashCode] == key) return hashTable[hashCode]; // ???? ?????
 
             hashCode = (hashCode + 1) % (this->size / 2);
         }
@@ -165,7 +165,7 @@ private:
         this->cnt = 0;
 
 
-        for (int i = 0; i < this->size / 2; i++) { //перезаписыаем старые ключи в новую мапу с новым размером
+        for (int i = 0; i < this->size / 2; i++) { //????????????? ?????? ????? ? ????? ???? ? ????? ????????
             string key = hashTableKeysTmp[i];
             string val = get(hashTableTmp, hashTableKeysTmp, key);
             put(key, val);
