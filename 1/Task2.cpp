@@ -40,7 +40,7 @@ int main() {
     // Начало измерения времени
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    bool isFind = find("file", 1000990);
+    bool isFind = find("file", 1000572);
     cout << isFind << endl;
 
     // Конец измерения времени

@@ -92,7 +92,7 @@ int main() {
     // Начало измерения времени
     auto startTime = std::chrono::high_resolution_clock::now();
 
-    int offset = binaryFind(array, 1000992);
+    int offset = binaryFind(array, 1000572);
     cout << offset << endl;
 
     // Конец измерения времени
