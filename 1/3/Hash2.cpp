@@ -1,15 +1,18 @@
 #include "iostream"
-#include "HashTable.cpp"
+#include "HashTableBin.h"
+#include "HashTableBin.cpp"
 #include <fstream>
 #include <ostream>
+#include <chrono>
 
 using namespace std;
 
 void updateToBinaryFile(string nameFile) {
 
     struct book {
-        char rus[15];
         char eng[15];
+        char rus[15];
+//        int offset;
     };
 
     ifstream readFile(nameFile + ".txt", ios::in);
@@ -29,11 +32,13 @@ void updateToBinaryFile(string nameFile) {
         return;
     }
 
+    int k = 0;
     while (!readFile.eof()) {
         string rus;
         string eng;
-        getline(readFile, rus);
+        int offset;
         getline(readFile, eng);
+        getline(readFile, rus);
 
         //---------------------------------------------------------
 
@@ -54,37 +59,42 @@ void updateToBinaryFile(string nameFile) {
         for (int i = 0; i < 15; i++) {
             X.eng[i] = engCharArray[i];
         }
+//        X.offset = k * sizeof(book);
 
         writeFile.write((char *) &X, sizeof(book));
 
-
+        k++;
     }
 
     readFile.close();
     writeFile.close();
-
-
 }
 
-void updateToHashTable(string nameFile, HashTable& map) {
+void updateToHashTable(string nameFile, HashTableBin &map) {
 
     struct book {
-        char rus[15];
         char eng[15];
+        char rus[15];
+//        int offset;
     };
 
     // считывание с файла
     ifstream readFile(nameFile + ".bin", ios::binary);
     book X;
 
+    int k = 0;
     while (!readFile.eof()) {
         readFile.read((char *) &X, sizeof(book));
-        char *rus = X.rus;
         char *eng = X.eng;
+        char *rus = X.rus;
         string rusStr = rus;
         string engStr = eng;
-        map.put(rusStr, engStr);
-        //cout << rus << " " << eng << endl;
+
+        int offset = k * sizeof(book);
+
+        map.put(engStr, offset);
+
+        k++;
 
     }
     readFile.close();
@@ -93,41 +103,43 @@ void updateToHashTable(string nameFile, HashTable& map) {
 
 int main() {
     setlocale(LC_ALL, "Russian");
-    updateToBinaryFile("base");
-    HashTable map = *new HashTable();
+    updateToBinaryFile("base3");
+    HashTableBin map = *new HashTableBin();
 
     //fill map
     cout << "--------------------" << endl;
-    updateToHashTable("base", map);
+    updateToHashTable("base3", map);
     map.print();
 
-    //delete element of map
-    cout << "--------------------" << endl;
-    string key = "Strong";
-    map.remove(key);
-
-    key = "New";
-    map.remove(key);
-
-    key = "Hot";
-    map.remove(key);
-
-    map.print();
-
-    //get element of map
     cout << "--------------------" << endl;
 
-    key = "Hot";
-    cout << map.get(key) << endl;
+    // Начало измерения времени
+    auto startTime = std::chrono::high_resolution_clock::now();
 
-    key = "School";
-    cout << map.get(key) << endl;
+    string key = "Win";
+    cout << map.getByBin(key) << endl;
 
-    key = "Doctor";
-    cout << map.get(key) << endl;
+    // Конец измерения времени
+    auto endTime = std::chrono::high_resolution_clock::now();
 
-    key = "Sad";
-    cout << map.get(key) << endl;
+    // Вычисление длительности выполнения программы в миллисекундах
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+
+    // Вывод длительности выполнения программы
+    std::cout << "time  " << duration.count() << " micros" << std::endl;
+
+
+    startTime = std::chrono::high_resolution_clock::now();
+
+    key = "Win";
+    map.remove(key);
+
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "time  " << duration.count() << " micros" << std::endl;
+
+    key = "Win";
+    cout << map.getByBin(key) << endl;
 
 
     return 0;

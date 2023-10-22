@@ -1,0 +1,9 @@
+//
+// Created by Andre on 22.10.2023.
+//
+
+#ifndef SIAODMIREA_HASHTABLEBIN_H
+#define SIAODMIREA_HASHTABLEBIN_H
+
+
+#endif //SIAODMIREA_HASHTABLEBIN_H
