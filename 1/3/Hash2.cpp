@@ -113,10 +113,9 @@ int main() {
 
     cout << "--------------------" << endl;
 
+    string key = "New";
     // Начало измерения времени
     auto startTime = std::chrono::high_resolution_clock::now();
-
-    string key = "Win";
     cout << map.getByBin(key) << endl;
 
     // Конец измерения времени
@@ -129,17 +128,53 @@ int main() {
     std::cout << "time  " << duration.count() << " micros" << std::endl;
 
 
+    key = "Doctor";
+    // Начало измерения времени
     startTime = std::chrono::high_resolution_clock::now();
 
-    key = "Win";
+    cout << map.getByBin(key) << endl;
+
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "time  " << duration.count() << " micros" << std::endl;
+
+    key = "Sad";
+    startTime = std::chrono::high_resolution_clock::now();
+
+    cout << map.getByBin(key) << endl;
+
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "time  " << duration.count() << " micros" << std::endl;
+
+    cout << "---------------------" << endl;
+
+    key = "Sad";
+    startTime = std::chrono::high_resolution_clock::now();
+
     map.remove(key);
 
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
     std::cout << "time  " << duration.count() << " micros" << std::endl;
 
-    key = "Win";
-    cout << map.getByBin(key) << endl;
+    key = "Doctor";
+    startTime = std::chrono::high_resolution_clock::now();
+
+    map.remove(key);
+
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "time  " << duration.count() << " micros" << std::endl;
+
+    key = "New";
+    startTime = std::chrono::high_resolution_clock::now();
+
+    map.remove(key);
+
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+    std::cout << "time  " << duration.count() << " micros" << std::endl;
 
 
     return 0;
