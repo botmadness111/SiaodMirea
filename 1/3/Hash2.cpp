@@ -78,7 +78,7 @@ void updateToHashTable(string nameFile, HashTableBin &map) {
 //        int offset;
     };
 
-    // СЃС‡РёС‚С‹РІР°РЅРёРµ СЃ С„Р°Р№Р»Р°
+    // считывание с файла
     ifstream readFile(nameFile + ".bin", ios::binary);
     book X;
 
@@ -114,22 +114,22 @@ int main() {
     cout << "--------------------" << endl;
 
     string key = "New";
-    // РќР°С‡Р°Р»Рѕ РёР·РјРµСЂРµРЅРёСЏ РІСЂРµРјРµРЅРё
+    // Начало измерения времени
     auto startTime = std::chrono::high_resolution_clock::now();
     cout << map.getByBin(key) << endl;
 
-    // РљРѕРЅРµС† РёР·РјРµСЂРµРЅРёСЏ РІСЂРµРјРµРЅРё
+    // Конец измерения времени
     auto endTime = std::chrono::high_resolution_clock::now();
 
-    // Р’С‹С‡РёСЃР»РµРЅРёРµ РґР»РёС‚РµР»СЊРЅРѕСЃС‚Рё РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕРіСЂР°РјРјС‹ РІ РјРёР»Р»РёСЃРµРєСѓРЅРґР°С…
+    // Вычисление длительности выполнения программы в миллисекундах
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
 
-    // Р’С‹РІРѕРґ РґР»РёС‚РµР»СЊРЅРѕСЃС‚Рё РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕРіСЂР°РјРјС‹
+    // Вывод длительности выполнения программы
     std::cout << "time  " << duration.count() << " micros" << std::endl;
 
 
     key = "Doctor";
-    // РќР°С‡Р°Р»Рѕ РёР·РјРµСЂРµРЅРёСЏ РІСЂРµРјРµРЅРё
+    // Начало измерения времени
     startTime = std::chrono::high_resolution_clock::now();
 
     cout << map.getByBin(key) << endl;

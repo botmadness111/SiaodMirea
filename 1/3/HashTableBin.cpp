@@ -182,6 +182,7 @@ public:
             }
 
             int offsetTmp = k * sizeof(book);
+            if (offsetTmp == offset) continue;
 
             if (offsetTmp != offset) {
                 writeFile.write((char *) &X, sizeof(book));

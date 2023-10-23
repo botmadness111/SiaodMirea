@@ -10,7 +10,6 @@ using namespace std;
 
 int main() {
     setlocale(LC_ALL, "Russian");
-    
 
 
     HashTable map = *new HashTable();
@@ -18,12 +17,12 @@ int main() {
     string val = "Olya";
 
     map.put(key, val);
-    //map.remove(key);
 
     key = "ляО";
     val = "lyaO";
     map.put(key, val);
-    //cout << map.get(key) << endl;
+    map.print();
+    cout << endl << "----------" << endl;
 
     key = "Коля";
     val = "Kolya";
@@ -44,6 +43,11 @@ int main() {
     key = "Андрей";
     val = "Andrey";
     map.put(key, val);
+
+    map.print();
+
+
+    cout << endl << "------------" << endl;
 
 
     key = "Коля";
@@ -66,7 +70,6 @@ int main() {
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
     std::cout << "time  " << duration.count() << " micros" << std::endl;
-
 
 
     cout << "------------" << endl;

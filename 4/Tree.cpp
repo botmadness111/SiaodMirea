@@ -15,6 +15,8 @@ class Tree {
     Tree *right = nullptr;
     int deep = -1;
     int size = 1;
+    int cntChildrens=0;
+    int lvl = 0;
 public:
 
     Tree(int val) {
@@ -200,34 +202,32 @@ public:
         rebuild();
     }
 
-    int getCountChildrensHelper(Tree *node, unordered_map<Tree *, int> &map) {
+    int getCountChildrensHelper(Tree *node) {
         if (node == nullptr) return 0;
 
-        int left = getCountChildrensHelper(node->left, map);
-        int right = getCountChildrensHelper(node->right, map);
-
-        map[node] = left + right;
+        int left = getCountChildrensHelper(node->left);
+        int right = getCountChildrensHelper(node->right);
+        node->cntChildrens = left+right;
 
         return left + right + 1;
     }
 
     vector<int> getCountChildrens() {
         Tree *node = this;
-        unordered_map<Tree *, int> *map;
-        getCountChildrensHelper(node, *map);
+        getCountChildrensHelper(node);
 
         queue<Tree *> qu;
         node = this;
         qu.push(node);
 
-        vector<int> *array;
+        vector<int>array;
 
         while (!qu.empty()) {
             node = qu.front();
             qu.pop();
 
-            int cnt = map->at(node);
-            array->push_back(cnt);
+            int cnt = node->cntChildrens;
+            array.push_back(cnt);
 
             Tree *left = nullptr;
             Tree *right = nullptr;
@@ -238,7 +238,44 @@ public:
             if (left != nullptr) qu.push(left);
             if (right != nullptr) qu.push(right);
         }
-        return *array;
+        return array;
+    }
+
+    void getLvlNodeHelper(Tree* node, int lvl){
+        if (node == nullptr) return;
+
+        getLvlNodeHelper(node->left, lvl+1);
+        getLvlNodeHelper(node->right, lvl+1);
+
+        node->lvl = lvl;
+    }
+
+    vector<int> getLvlNode(){
+        Tree *node = this;
+        getLvlNodeHelper(node, node->lvl);
+
+        queue<Tree *> qu;
+        node = this;
+        qu.push(node);
+
+        vector<int>array;
+
+        while (!qu.empty()) {
+            node = qu.front();
+            qu.pop();
+
+            array.push_back(node->lvl);
+
+            Tree *left = nullptr;
+            Tree *right = nullptr;
+
+            if (node->left != nullptr) left = node->left;
+            if (node->right != nullptr) right = node->right;
+
+            if (left != nullptr) qu.push(left);
+            if (right != nullptr) qu.push(right);
+        }
+        return array;
     }
 
     void print() {

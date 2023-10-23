@@ -19,9 +19,16 @@ int main() {
     cout << endl;
     cout << "-------------------------" << endl;
 
-    vector<int> array = tree->getCountChildrens();
-    for (int i = 0; i < array.size(); i++) {
-        cout << array[i] << " ";
+    vector<int> arrayChildrens = tree->getCountChildrens();
+    for (int i = 0; i < arrayChildrens.size(); i++) {
+        cout << arrayChildrens[i] << " ";
+    }
+    cout << endl;
+    cout << "-------------------------" << endl;
+
+    vector<int> arrayLvl = tree->getLvlNode();
+    for (int i = 0; i < arrayLvl.size(); i++) {
+        cout << arrayLvl[i] << " ";
     }
 
 //    tree->removeLastLeft();
