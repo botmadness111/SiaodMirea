@@ -4,29 +4,41 @@
 
 #include <iostream>
 #include "BinarySerachTree.cpp"
+#include "BinaryFile.cpp"
 
 using namespace std;
 
+
 int main() {
     setlocale(LC_ALL, "Russian");
+    string nameFile = "fileTree";
+
+    BinaryFile binaryFile;
+    binaryFile.updateToBinaryFile(nameFile);
 
     BinarySearchTree *tree = new BinarySearchTree();
-    tree->add("z");
-    tree->add("b");
+    binaryFile.makeSelect(nameFile, *tree);
 
-    tree->add("a");
-    tree->add("d");
-    tree->add("f");
-    tree->add("c");
-
-    tree->add("A");
-    tree->add("B");
+    cout << tree->get("Blue") << endl;
 
 
+//    tree->add("cat", "кот");
+//    tree->add("base", "база");
+//
+//    tree->add("azxcew", "ацхцев");
+//    tree->add("dq", "дэйю");
+//    tree->add("ff", "фф");
+//    tree->add("case", "кейс");
+//
+//    tree->add("Agf", "Аджиф");
+//    tree->add("Bx", "Бэкс");
 
-    tree->remove("b");
+    //cout << tree->get("Agf") << endl;;
 
-    tree->printTree();
+    //tree->remove("cat");
+
+    //tree->printTree();
+
 
     return 1;
 

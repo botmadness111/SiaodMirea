@@ -7,6 +7,7 @@
 #include <queue>
 #include "Node.cpp"
 #include <cmath>
+#include <fstream>
 
 using namespace std;
 
@@ -15,7 +16,6 @@ class BinarySearchTree {
 
 public:
     struct book {
-        char eng[15];
         char rus[15];
     };
 
@@ -29,11 +29,11 @@ public:
         head = nullptr;
     };
 
-    bool add(string name) {
-        return addBinary(name);
+    bool add(string name, string translate) {
+        return addBinary(name, translate);
     }
 
-    Node get(string name) {
+    string get(string name) {
         return getBinary(name);
     }
 
@@ -46,14 +46,55 @@ public:
     }
 
 private:
+    string getTranslate(string nameFile, int offset) {
+        string result = "";
+
+        book X;
+        ifstream readFile(nameFile + ".bin", ios::binary);
+        readFile.seekg(offset);
+        readFile.read((char *) &X, sizeof(book));
+        for (auto chr: X.rus) {
+            result += chr;
+        }
+        readFile.close();
+        return result;
+    }
+
+    void writeToBinaryFile(string nameFile, string name) {
+
+        ofstream writeFile(nameFile + ".bin", ios::in | ios::binary | ios::app);
+
+        if (!writeFile) {
+            cout << "No open file: " << nameFile << ".bin";
+            return;
+        }
+
+        book X;
+        for (int i = 0; i < 15; i++) {
+            if (i >= name.length()){
+                X.rus[i] = '_';
+            }
+            else{
+                X.rus[i] = name[i];
+            }
+
+        }
+
+        writeFile.write((char *) &X, sizeof(book));
+
+        writeFile.close();
+    }
+
     int getOffset() {
         offset += STEP;
         return offset - STEP;
     }
 
-    bool addBinary(string &name) {
+    bool addBinary(string &name, string &translate) {
         if (head == nullptr) {
-            head = new Node(name, getOffset());
+            int offset2 = getOffset();
+            head = new Node(name, offset2);
+            writeToBinaryFile("fileTree", translate);
             return true;
         } else {
             Node *current = head;
@@ -61,15 +102,19 @@ private:
                 if (name >= current->key) {
                     if (current->right != nullptr) current = current->right;
                     else {
-                        current->right = new Node(name, getOffset());
+                        int offset2 = getOffset();
+                        current->right = new Node(name, offset2);
                         current->right->past = current;
+                        writeToBinaryFile("fileTree", translate);
                         return true;
                     }
                 } else {
                     if (current->left != nullptr) current = current->left;
                     else {
-                        current->left = new Node(name, getOffset());
+                        int offset2 = getOffset();
+                        current->left = new Node(name, offset2);
                         current->left->past = current;
+                        writeToBinaryFile("fileTree", translate);
                         return true;
                     }
                 }
@@ -79,17 +124,19 @@ private:
         }
     }
 
-    Node getBinary(string &name) {
+    string getBinary(string &name) {
         Node *current = head;
         while (current != nullptr) {
             if (name > current->key) {
                 current = current->right;
             } else if (name < current->key) {
                 current = current->left;
-            } else return *current;
+            } else {
+                int offset2 = current->getOffset();
+                return getTranslate("fileTree", offset2);
+            }
         }
-        Node *tmp = nullptr;
-        return *tmp;
+        return "Error";
     }
 
     bool removeBinary(string &name) {
@@ -157,12 +204,12 @@ private:
                         current->past->left = current->right;
                         return true;
                     } else if (current->left != nullptr && current->right != nullptr) {
-                        Node* tmp = current->right;
+                        Node *tmp = current->right;
 
                         current->past->left = current->left;
 
-                        Node* goRight = current->left;
-                        while (goRight->right != nullptr){
+                        Node *goRight = current->left;
+                        while (goRight->right != nullptr) {
                             goRight = goRight->right;
                         }
                         goRight->right = tmp;
