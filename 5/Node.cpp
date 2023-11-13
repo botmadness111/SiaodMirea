@@ -13,8 +13,8 @@ private:
 public:
     string key;
     Node *past = nullptr;
-    Node *left = nullptr;
-    Node *right = nullptr;
+    Node left = nullptr;
+    Node right = nullptr;
 
     Node(string key, int offset) {
         this->key = key;

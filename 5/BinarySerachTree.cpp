@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include <vector>
+#include <queue>
 #include "Node.cpp"
 
 using namespace std;
@@ -38,6 +40,10 @@ public:
         return removeBinary(name);
     }
 
+    void printTree() {
+
+    }
+
 private:
     int getOffset() {
         offset += STEP;
@@ -68,13 +74,13 @@ private:
                 } else if (name < current->key) {
                     if (current->left == nullptr) {
                         current->left = new Node(name, getOffset());
-                        current->left->past = current->left;
+                        current->left->past = current;
                         return true;
                     } else if (name >= current->left->key) {
                         Node *tmp = current->left;
                         current->left = new Node(name, getOffset());
                         current->left->left = tmp;
-                        current->left->left = current->left->past;
+                        current->left->left->past = current->left;
                         return true;
                     } else {
                         current = current->left;
@@ -107,7 +113,25 @@ private:
                 current = current->left;
             } else {
                 if (current == head) {
-                    head = nullptr;
+                    if (head->left != nullptr) {
+                        Node *tmp = head->right;
+                        head = head->left;
+                        current = head;
+                        while (current->right != nullptr) {
+                            current = current->right;
+                        }
+                        current->right = tmp;
+                    } else if (head->right != nullptr) {
+                        Node *tmp = head->left;
+                        head = head->right;
+                        current = head;
+                        while (current->left != nullptr) {
+                            current = current->left;
+                        }
+                        current->left = tmp;
+                    } else {
+                        head = nullptr;
+                    }
                     return true;
                 }
 
@@ -135,4 +159,43 @@ private:
 
     }
 
+    vector<string> helper(queue<Node> queue) {
+        vector<string> vector;
+        while (!queue.empty()) {
+            Node node = queue.front();
+            queue.pop();
+            if (node.left != nullptr) {
+                vector.push_back(node.left.key);
+            } else {
+                vector.push_back("*");
+            }
+            if (node.right != nullptr) {
+                vector.push_back(node.right.key);
+            } else {
+                vector.push_back("*");
+            }
+        }
+        return vector;
+    }
+
+    void breadthFirstSearch(vector<vector<string>> &bfs) {
+        vector<string> vector;
+        vector.push_back(head->key);
+        bfs.push_back(vector);
+        vector.clear();
+
+        queue<Node> queue;
+        queue.push(*head);
+
+
+
+    }
+
+    void printBinaryTree() {
+        vector<vector<string>> bfs;
+
+    }
 };
+
+
+
