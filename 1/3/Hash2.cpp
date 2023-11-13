@@ -176,6 +176,14 @@ int main() {
     duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
     std::cout << "time  " << duration.count() << " micros" << std::endl;
 
+    key = "Apple";
+    map.remove(key);
+
+
+    cout << "---------" << endl;
+
+    key="Car";
+    cout << map.get(key);
 
     return 0;
 }

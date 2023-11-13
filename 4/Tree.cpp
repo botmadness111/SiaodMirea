@@ -15,7 +15,7 @@ class Tree {
     Tree *right = nullptr;
     int deep = -1;
     int size = 1;
-    int cntChildrens=0;
+    int cntChildrens = 0;
     int lvl = 0;
 public:
 
@@ -207,7 +207,7 @@ public:
 
         int left = getCountChildrensHelper(node->left);
         int right = getCountChildrensHelper(node->right);
-        node->cntChildrens = left+right;
+        node->cntChildrens = left + right;
 
         return left + right + 1;
     }
@@ -220,7 +220,7 @@ public:
         node = this;
         qu.push(node);
 
-        vector<int>array;
+        vector<int> array;
 
         while (!qu.empty()) {
             node = qu.front();
@@ -241,16 +241,16 @@ public:
         return array;
     }
 
-    void getLvlNodeHelper(Tree* node, int lvl){
+    void getLvlNodeHelper(Tree *node, int lvl) {
         if (node == nullptr) return;
 
-        getLvlNodeHelper(node->left, lvl+1);
-        getLvlNodeHelper(node->right, lvl+1);
+        getLvlNodeHelper(node->left, lvl + 1);
+        getLvlNodeHelper(node->right, lvl + 1);
 
         node->lvl = lvl;
     }
 
-    vector<int> getLvlNode(){
+    vector<int> getLvlNode() {
         Tree *node = this;
         getLvlNodeHelper(node, node->lvl);
 
@@ -258,7 +258,7 @@ public:
         node = this;
         qu.push(node);
 
-        vector<int>array;
+        vector<int> array;
 
         while (!qu.empty()) {
             node = qu.front();

@@ -110,7 +110,9 @@ public:
         for (int i = 0; i < size; i++) {
             string key = this->hashTableKeys[i];
             string val = this->hashTable[i];
-            if (!key.empty()) cout << key << +": " << val << endl;
+            if (!key.empty()){
+                cout << key << +": " << val << " " << i << endl;
+            }
         }
     }
 
