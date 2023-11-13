@@ -22,4 +22,8 @@ public:
     }
 
     Node() {}
+
+    int getOffset() {
+        return this->offset;
+    }
 };

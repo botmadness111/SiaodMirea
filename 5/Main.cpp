@@ -11,13 +11,22 @@ int main() {
     setlocale(LC_ALL, "Russian");
 
     BinarySearchTree *tree = new BinarySearchTree();
+    tree->add("z");
     tree->add("b");
+
     tree->add("a");
+    tree->add("d");
+    tree->add("f");
     tree->add("c");
 
-    cout << tree->remove("a") << endl;
-    cout << tree->remove("c") << endl;
-    cout << tree->remove("b") << endl;
+    tree->add("A");
+    tree->add("B");
+
+
+
+    tree->remove("b");
+
+    tree->printTree();
 
     return 1;
 

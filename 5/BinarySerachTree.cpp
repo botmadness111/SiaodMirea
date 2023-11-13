@@ -6,6 +6,7 @@
 #include <vector>
 #include <queue>
 #include "Node.cpp"
+#include <cmath>
 
 using namespace std;
 
@@ -41,7 +42,7 @@ public:
     }
 
     void printTree() {
-
+        printBinaryTree();
     }
 
 private:
@@ -57,36 +58,23 @@ private:
         } else {
             Node *current = head;
             while (true) {
-                if (name > current->key) {
-                    if (current->right == nullptr) {
+                if (name >= current->key) {
+                    if (current->right != nullptr) current = current->right;
+                    else {
                         current->right = new Node(name, getOffset());
                         current->right->past = current;
                         return true;
-                    } else if (name <= current->right->key) {
-                        Node *tmp = current->right;
-                        current->right = new Node(name, getOffset());
-                        current->right->right = tmp;
-                        current->right->right->past = current->right;
-                        return true;
-                    } else {
-                        current = current->right;
                     }
-                } else if (name < current->key) {
-                    if (current->left == nullptr) {
+                } else {
+                    if (current->left != nullptr) current = current->left;
+                    else {
                         current->left = new Node(name, getOffset());
                         current->left->past = current;
                         return true;
-                    } else if (name >= current->left->key) {
-                        Node *tmp = current->left;
-                        current->left = new Node(name, getOffset());
-                        current->left->left = tmp;
-                        current->left->left->past = current->left;
-                        return true;
-                    } else {
-                        current = current->left;
                     }
                 }
             }
+            return false;
 
         }
     }
@@ -136,22 +124,59 @@ private:
                 }
 
                 if (current == current->past->right) {
-                    Node *tmp = current->right;
-                    current->past->right = current->left;
-                    while (current->right != nullptr) {
-                        current = current->right;
+                    if (current->left == nullptr) {
+                        current->past->right = current->right;
+                        return true;
+                    } else if (current->right == nullptr) {
+                        current->past->right = current->left;
+                        return true;
+                    } else if (current->right != nullptr && current->left != nullptr) {
+                        Node *tmp = current->left;
+
+                        current->past->right = current->right;
+
+                        Node *goLeft = current->right;
+                        while (goLeft->left != nullptr) {
+                            goLeft = goLeft->left;
+                        }
+                        goLeft->left = tmp;
+                        return true;
+                    } else {
+                        current->past->right = nullptr;
+                        return true;
                     }
-                    current->right = tmp;
+
+                    return false;
+
+
                 } else {
-                    Node *tmp = current->right;
-                    current->past->left = current->right;
-                    while (current->left != nullptr) {
-                        current = current->left;
+                    if (current->right == nullptr) {
+                        current->past->left = current->left;
+                        return true;
+                    } else if (current->left == nullptr) {
+                        current->past->left = current->right;
+                        return true;
+                    } else if (current->left != nullptr && current->right != nullptr) {
+                        Node* tmp = current->right;
+
+                        current->past->left = current->left;
+
+                        Node* goRight = current->left;
+                        while (goRight->right != nullptr){
+                            goRight = goRight->right;
+                        }
+                        goRight->right = tmp;
+                        return true;
+
+                    } else {
+                        current->past->left = nullptr;
+                        return true;
                     }
-                    current->left = tmp;
+
+                    return false;
                 }
 
-                return true;
+                return false;
 
             }
         }
@@ -159,41 +184,100 @@ private:
 
     }
 
-    vector<string> helper(queue<Node> queue) {
+    vector<string> helper(queue<Node> queue) { //return all children
         vector<string> vector;
         while (!queue.empty()) {
-            Node node = queue.front();
+            Node *node = &queue.front();
             queue.pop();
-            if (node.left != nullptr) {
-                vector.push_back(node.left.key);
+
+            if (node->left != nullptr) {
+                vector.push_back(node->left->key);
             } else {
                 vector.push_back("*");
             }
-            if (node.right != nullptr) {
-                vector.push_back(node.right.key);
+            if (node->right != nullptr) {
+                vector.push_back(node->right->key);
             } else {
                 vector.push_back("*");
             }
+
         }
         return vector;
     }
 
     void breadthFirstSearch(vector<vector<string>> &bfs) {
-        vector<string> vector;
-        vector.push_back(head->key);
-        bfs.push_back(vector);
-        vector.clear();
+        queue<Node> queuee;
+        queuee.push(*head);
 
-        queue<Node> queue;
-        queue.push(*head);
+        vector<string> children;
+        children.push_back(head->key);
+        bfs.push_back(children);
+        bfs.push_back(helper(queuee));
+
+        while (!queuee.empty()) {
+            int k = 0;
+            int kk = 0;
+            queue<Node> queueTmp;
+            while (!queuee.empty()) {
+                Node *node = &queuee.front();
+                queuee.pop();
+
+                if (node->getOffset() == -1) k++;
+                kk++;
 
 
+                if (node->left != nullptr) queueTmp.push(*node->left);
+                else queueTmp.push(*new Node("*", -1));
 
+                if (node->right != nullptr) queueTmp.push(*node->right);
+                else queueTmp.push(*new Node("*", -1));
+
+            }
+            if (k == kk) {
+                return;
+            }
+
+            //rewrite from queueTmp to queue
+            while (!queueTmp.empty()) {
+                queuee.push(queueTmp.front());
+                queueTmp.pop();
+            }
+
+            children = helper(queuee);
+            bfs.push_back(children);
+        }
     }
 
     void printBinaryTree() {
         vector<vector<string>> bfs;
 
+        breadthFirstSearch(bfs);
+
+        int deep = bfs.size() - 1;
+        int max = pow(2, deep);
+
+        int start = max / 3;
+        int end = start * 2;
+        int cnt = 1;
+
+        for (auto items: bfs) {
+
+            int step = (end - start) / cnt;
+            for (auto item: items) {
+
+                for (int j = 0; j < step; j++) {
+                    cout << " ";
+                }
+
+                cout << item << " ";
+                step += step / (cnt);
+
+            }
+            cout << endl;
+
+            end += 1; // change!!!
+            cnt *= 2;
+        }
     }
 };
 
