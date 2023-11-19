@@ -56,7 +56,6 @@ public:
                 break;
             }
             if (val <= cur->value && cur->leftOnLvl != nullptr && val >= cur->leftOnLvl->value) {
-                cout << val << endl;
                 ValueNode *tmp = cur->leftOnLvl;
 
                 ValueNode *newValueNode = new ValueNode(val, this);
