@@ -134,14 +134,17 @@ public:
                 } else {
                     rebuild(pastNode);
 
-                    //тут переписать past
+                    //тут переписать past - он будет равен новому left/right
                     //тут нужно начать с head
-                    for (auto point: pastNode->pointers) {
-                        if (point.next == cur) {
-                            cur->past = point.myNode;
-                            break;
-                        }
-                    }
+
+                    TreeNode* past = findNode(midVal);
+
+//                    for (auto point: pastNode->pointers) {
+//                        if (point.next == cur) {
+//                            cur->past = point.myNode;
+//                            break;
+//                        }
+//                    }
 
                     pastNode = cur->past;
 
