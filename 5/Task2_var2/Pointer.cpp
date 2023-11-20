@@ -11,9 +11,10 @@ public:
     int val;
 
 
-    Pointer(TreeNode *next, int val) {
+    Pointer(TreeNode *next, int val, TreeNode *myNode) {
         this->next = next;
         this->val = val;
+        this->myNode = myNode;
     }
 
 

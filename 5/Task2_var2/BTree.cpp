@@ -59,13 +59,13 @@ public:
 
             if (cur->values.empty()) {
                 cur->values.push_back(val);
-                cur->pointers.push_back(*new Pointer(nullptr, val));
-                cur->pointers.push_back(*new Pointer(nullptr, val));
+                cur->pointers.push_back(*new Pointer(nullptr, val, cur));
+                cur->pointers.push_back(*new Pointer(nullptr, val, cur));
             } else {
                 cur->values.push_back(val);
                 sort(cur->values.begin(), cur->values.end());
 
-                cur->pointers.push_back(*new Pointer(nullptr, val));
+                cur->pointers.push_back(*new Pointer(nullptr, val, cur));
             }
 
 
@@ -87,6 +87,7 @@ public:
             std::vector<Pointer> pointers;
             for (auto point: cur->pointers) {
                 if (point.val != midVal) {
+                    point.myNode = cur;
                     pointers.push_back(point);
                 }
             }
@@ -104,6 +105,7 @@ public:
                 leftNode->values.push_back(cur->values[i]);
                 for (auto point: cur->pointers) {
                     if (point.val == cur->values[i]) {
+                        point.myNode = leftNode;
                         leftNode->pointers.push_back(point);
                     }
                 }
@@ -113,6 +115,7 @@ public:
                 rightNode->values.push_back(cur->values[i]);
                 for (auto point: cur->pointers) {
                     if (point.val == cur->values[i]) {
+                        point.myNode = rightNode;
                         rightNode->pointers.push_back(point);
                     }
                 }
@@ -125,16 +128,18 @@ public:
                     pastNode->values.push_back(midVal);
                     sort(pastNode->values.begin(), pastNode->values.end());
 
-                    pastNode->pointers.push_back(*new Pointer(leftNode, midVal));
-                    pastNode->pointers.push_back(*new Pointer(rightNode, midVal));
+                    pastNode->pointers.push_back(*new Pointer(leftNode, midVal, pastNode));
+                    pastNode->pointers.push_back(*new Pointer(rightNode, midVal, pastNode));
 
                 } else {
                     rebuild(pastNode);
 
                     //тут переписать past
+                    //тут нужно начать с head
                     for (auto point: pastNode->pointers) {
                         if (point.next == cur) {
                             cur->past = point.myNode;
+                            break;
                         }
                     }
 
@@ -144,8 +149,8 @@ public:
                     pastNode->values.push_back(midVal);
                     sort(pastNode->values.begin(), pastNode->values.end());
 
-                    pastNode->pointers.push_back(*new Pointer(leftNode, midVal));
-                    pastNode->pointers.push_back(*new Pointer(rightNode, midVal));
+                    pastNode->pointers.push_back(*new Pointer(leftNode, midVal, pastNode));
+                    pastNode->pointers.push_back(*new Pointer(rightNode, midVal, pastNode));
 
 
                 }
@@ -169,8 +174,8 @@ public:
             } else {
                 head = new TreeNode();
                 head->values.push_back(midVal);
-                head->pointers.push_back(*new Pointer(leftNode, midVal));
-                head->pointers.push_back(*new Pointer(rightNode, midVal));
+                head->pointers.push_back(*new Pointer(leftNode, midVal, head));
+                head->pointers.push_back(*new Pointer(rightNode, midVal, head));
 
                 leftNode->past = head;
                 rightNode->past = head;
