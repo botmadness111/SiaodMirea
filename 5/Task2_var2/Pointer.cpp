@@ -6,6 +6,7 @@ class TreeNode;
 
 class Pointer {
 public:
+    TreeNode *myNode = nullptr;
     TreeNode *next = nullptr;
     int val;
 

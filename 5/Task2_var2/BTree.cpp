@@ -22,16 +22,37 @@ public:
         //go max down
 
         TreeNode *cur = head;
-        for (auto value: cur->values) {
-            if (val <= value) {
-                //take point of value
-                for (auto point: cur->pointers) {
-                    if (point.val == value && point.next != nullptr) {
-                        cur = point.next;
-                        break;
+
+        bool flag = true;
+        while (flag) {
+            flag = false;
+            int valueZ = -1;
+            int i = 0;
+            for (i; i < cur->values.size(); i++) {
+                int value = cur->values[i];
+                if (val < value) {
+                    //take point of value
+                    for (auto point: cur->pointers) {
+                        if (point.val == value && point.next != nullptr) {
+                            cur = point.next;
+                            flag = true;
+                            break;
+                        }
+                    }
+                } else {
+                    valueZ = value;
+                    if (i + 1 < cur->values.size()) {
+                        valueZ = cur->values[i + 1];
                     }
                 }
             }
+            for (auto point: cur->pointers) {
+                if (point.val == valueZ && point.next != nullptr) {
+                    cur = point.next;
+                    flag = true;
+                }
+            }
+
         }
 
         if (cur->values.size() < M) {
@@ -49,15 +70,14 @@ public:
 
 
         } else {
-            rebuild();
+            rebuild(cur);
 
             add(val);
 
         }
     }
 
-    void rebuild() {
-        TreeNode *cur = head;
+    void rebuild(TreeNode *cur) {
 
         if (cur->values.size() == M) {
             int mid = cur->values.size() / 2;
@@ -100,6 +120,36 @@ public:
 
             TreeNode *pastNode = cur->past;
             if (pastNode != nullptr) {
+                // add midVal into past Node
+                if (pastNode->values.size() < M) {
+                    pastNode->values.push_back(midVal);
+                    sort(pastNode->values.begin(), pastNode->values.end());
+
+                    pastNode->pointers.push_back(*new Pointer(leftNode, midVal));
+                    pastNode->pointers.push_back(*new Pointer(rightNode, midVal));
+
+                } else {
+                    rebuild(pastNode);
+
+                    //тут переписать past
+                    for (auto point: pastNode->pointers) {
+                        if (point.next == cur) {
+                            cur->past = point.myNode;
+                        }
+                    }
+
+                    pastNode = cur->past;
+
+                    // add midVal into past Node
+                    pastNode->values.push_back(midVal);
+                    sort(pastNode->values.begin(), pastNode->values.end());
+
+                    pastNode->pointers.push_back(*new Pointer(leftNode, midVal));
+                    pastNode->pointers.push_back(*new Pointer(rightNode, midVal));
+
+
+                }
+
                 //delete Nodes for empty pointers
                 std::vector<Pointer> pointersPast;
                 for (auto point: pastNode->pointers) {
@@ -113,21 +163,20 @@ public:
                     pastNode->pointers.push_back(point);
                 }
 
-                // add midVal into past Node
-                if (pastNode->values.size() < M) {
-                    pastNode->values.push_back(midVal);
-                    sort(pastNode->values.begin(), pastNode->values.end());
 
-                    pastNode->pointers.push_back(*new Pointer(leftNode, midVal));
-                    pastNode->pointers.push_back(*new Pointer(rightNode, midVal));
-
-                }
+                leftNode->past = pastNode;
+                rightNode->past = pastNode;
             } else {
                 head = new TreeNode();
                 head->values.push_back(midVal);
                 head->pointers.push_back(*new Pointer(leftNode, midVal));
                 head->pointers.push_back(*new Pointer(rightNode, midVal));
+
+                leftNode->past = head;
+                rightNode->past = head;
             }
         }
     }
+
+
 };
