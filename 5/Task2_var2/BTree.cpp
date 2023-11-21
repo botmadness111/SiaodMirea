@@ -137,16 +137,8 @@ public:
                     //тут переписать past - он будет равен новому left/right
                     //тут нужно начать с head
 
-                    TreeNode* past = findNode(midVal);
-
-//                    for (auto point: pastNode->pointers) {
-//                        if (point.next == cur) {
-//                            cur->past = point.myNode;
-//                            break;
-//                        }
-//                    }
-
-                    pastNode = cur->past;
+                    pastNode = findPastNode(midVal);
+                    cur->past = pastNode;
 
                     // add midVal into past Node
                     pastNode->values.push_back(midVal);
@@ -186,5 +178,27 @@ public:
         }
     }
 
+    TreeNode *findPastNode(int val) {
+        queue<TreeNode *> myQueue;
+        myQueue.push(head);
+
+        TreeNode* pastCur = nullptr;
+        while (!myQueue.empty()) {
+            TreeNode *cur = myQueue.front();
+            myQueue.pop();
+
+            for (auto value: cur->values) {
+                if (val == value) return pastCur;
+            }
+
+            for (auto point: cur->pointers) {
+                if (point.next != nullptr) myQueue.push(point.next);
+            }
+            pastCur = cur;
+
+        }
+
+        return nullptr;
+    }
 
 };
