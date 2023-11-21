@@ -17,5 +17,7 @@ public:
         this->myNode = myNode;
     }
 
+    Pointer(){}
+
 
 };
