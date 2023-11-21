@@ -2,16 +2,18 @@
 // Created by Andre on 19.11.2023.
 //
 
+using namespace std;
+
 class TreeNode;
 
 class Pointer {
 public:
     TreeNode *myNode = nullptr;
     TreeNode *next = nullptr;
-    int val;
+    string val;
 
 
-    Pointer(TreeNode *next, int val, TreeNode *myNode) {
+    Pointer(TreeNode *next, string val, TreeNode *myNode) {
         this->next = next;
         this->val = val;
         this->myNode = myNode;
