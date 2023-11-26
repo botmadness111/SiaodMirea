@@ -26,63 +26,20 @@ public:
 
         TreeNode *cur = head;
 
-        bool flag = true;
-        while (flag) {
-            flag = false;
-            int i = 0;
-            for (i = 0; i < cur->values.size(); i++) {
-                string value = cur->values[i].val;
-                if (val < value) {
-                    int k = 0;
-                    if (i == 0) {
-                        for (auto point: cur->pointers) {
-                            if (point.val == value && point.next != nullptr) {
-                                cur = point.next;
-                                flag = true;
-                                break;
-                            }
-                        }
-                        break;
-                    } else {
-                        TreeNode *firstCur = nullptr;
-                        for (auto point: cur->pointers) {
-                            if (point.val == value && point.next != nullptr) {
-                                if (firstCur == nullptr) firstCur = point.next;
-                                flag = true;
-                                k++;
-                            }
-                        }
-                        if (k == 2) {
-                            cur = firstCur;
-                            break;
-                        }
-                    }
-
-                } else {
-                    int k = 0;
-                    if (i == cur->values.size() - 1) {
-                        for (auto point: cur->pointers) {
-                            if (point.val == value && point.next != nullptr) {
-                                cur = point.next;
-                                flag = true;
-                            }
-                        }
-                        break;
-                    } else {
-                        TreeNode *lastCur = nullptr;
-                        for (auto point: cur->pointers) {
-                            if (point.val == value && point.next != nullptr) {
-                                lastCur = point.next;
-                                flag = true;
-                                k++;
-                            }
-                        }
-                        if (k == 2) {
-                            cur = lastCur;
-                            break;
-                        }
-                    }
-                }
+        for (int i = 0; i < cur->pointers.size(); i++) {
+            string value = cur->pointers[i].val;
+            if (val < value) {
+                if (cur->pointers[i].next != nullptr) cur = cur->pointers[i].next;
+                else break;
+                i = -1;
+            } else if (val > value && i == cur->pointers.size() - 1) {
+                if (cur->pointers[i].next != nullptr) cur = cur->pointers[i].next;
+                else break;
+                i = -1;
+            } else if (val > value && val < cur->pointers[i + 1].val) {
+                if (cur->pointers[i].next != nullptr) cur = cur->pointers[i + 1].next;
+                else break;
+                i = -1;
             }
         }
 
@@ -97,6 +54,7 @@ public:
                 sort(cur->values.begin(), cur->values.end());
 
                 cur->pointers.push_back(*new Pointer(nullptr, val, cur));
+                sort(cur->pointers.begin(), cur->pointers.end());
             }
 
 
@@ -104,7 +62,6 @@ public:
             rebuild(cur);
 
             add(val, translate);
-
         }
     }
 
@@ -148,12 +105,30 @@ public:
 
                     pastNode->pointers.push_back(*new Pointer(leftNode, midVal.val, pastNode));
                     pastNode->pointers.push_back(*new Pointer(rightNode, midVal.val, pastNode));
+                    sort(pastNode->pointers.begin(), pastNode->pointers.end());
 
                 } else {
                     rebuild(pastNode);
 
-                    pastNode = findPastNode(midVal.val);
-                    cur->past = pastNode;
+
+                    //тут все переписать! PASTnODE ƒЋя left и дл€ right!!!
+                    pastNode = findNode(pastNode->values[pastNode->values.size() / 2].val);
+
+                    if (midVal.val < pastNode->values[pastNode->values.size() / 2].val) {
+                        for (auto point: pastNode->pointers) {
+                            if (point.val == pastNode->values[pastNode->values.size() / 2].val) {
+                                pastNode = point.next;
+                                break;
+                            }
+                        }
+                    } else {
+                        for (auto point: pastNode->pointers) {
+                            if (point.val == pastNode->values[pastNode->values.size() / 2].val) {
+                                pastNode = point.next;
+                            }
+                        }
+                    }
+
 
                     // add midVal into past Node
                     pastNode->values.push_back(midVal);
@@ -161,6 +136,7 @@ public:
 
                     pastNode->pointers.push_back(*new Pointer(leftNode, midVal.val, pastNode));
                     pastNode->pointers.push_back(*new Pointer(rightNode, midVal.val, pastNode));
+                    sort(pastNode->pointers.begin(), pastNode->pointers.end());
 
                 }
 
@@ -185,9 +161,20 @@ public:
                 head->values.push_back(midVal);
                 head->pointers.push_back(*new Pointer(leftNode, midVal.val, head));
                 head->pointers.push_back(*new Pointer(rightNode, midVal.val, head));
-                for (auto point: cur->pointers){
-                    if (point.val == midVal.val){
-                        pastNode->pointers.push_back(point);
+
+                int k = 0;
+                for (auto point: cur->pointers) {
+                    if (point.val == midVal.val) {
+                        if (k == 0) {
+                            point.myNode = leftNode;
+                            //point.val = leftNode->pointers[leftNode->pointers.size() - 1].val;
+                            leftNode->pointers.push_back(point);
+                        } else {
+                            point.myNode = rightNode;
+                            //point.val = rightNode->pointers[rightNode->pointers.size() - 1].val;
+                            rightNode->pointers.push_back(point);
+                        }
+                        k++;
                     }
                 }
 
@@ -195,20 +182,6 @@ public:
                 rightNode->past = head;
 
             }
-
-            //delete midVal of pointers of Current Node
-//            std::vector<Pointer> pointers;
-//            for (auto point: cur->pointers) {
-//                if (point.val != midVal.val) {
-//                    point.myNode = cur;
-//                    pointers.push_back(point);
-//                }
-//            }
-//
-//            cur->pointers.clear();
-//            for (auto point: pointers) {
-//                cur->pointers.push_back(point);
-//            }
         }
     }
 
@@ -242,72 +215,60 @@ public:
         return nullptr;
     }
 
+    TreeNode *findNode(string val) {
+        queue<TreeNode *> myQueue;
+        myQueue.push(head);
+
+
+        while (!myQueue.empty()) {
+            TreeNode *cur = myQueue.front();
+            myQueue.pop();
+
+            for (auto value: cur->values) {
+                if (val == value.val) return cur;
+            }
+
+            for (auto point: cur->pointers) {
+                if (point.next != nullptr) {
+                    myQueue.push(point.next);
+                }
+
+            }
+        }
+
+        return nullptr;
+    }
+
     string get(string val) {
 
         TreeNode *cur = head;
 
         bool flag = true;
-        while (flag) {
-
-            for (auto value: cur->values) {
-                if (value.val == val) return value.translate;
+        for (int i = 0; i < cur->pointers.size(); i++) {
+            if (flag) {
+                for (const auto &obj: cur->values) {
+                    if (val == obj.val) return obj.translate;
+                    flag = false;
+                }
             }
 
-            flag = false;
-            int i = 0;
-            for (i = 0; i < cur->values.size(); i++) {
-                string value = cur->values[i].val;
-                if (val < value) {
-                    int k = 0;
-                    if (i == 0) {
-                        for (auto point: cur->pointers) {
-                            if (point.val == value && point.next != nullptr) {
-                                cur = point.next;
-                                flag = true;
-                                break;
-                            }
-                        }
-                        break;
-                    } else {
-                        TreeNode *firstCur = nullptr;
-                        for (auto point: cur->pointers) {
-                            if (point.val == value && point.next != nullptr) {
-                                if (firstCur == nullptr) firstCur = point.next;
-                                flag = true;
-                                k++;
-                            }
-                        }
-                        if (k == 2) {
-                            cur = firstCur;
-                            break;
-                        }
-                    }
 
-                } else {
-                    int k = 0;
-                    if (i == cur->values.size() - 1) {
-                        for (auto point: cur->pointers) {
-                            if (point.val == value && point.next != nullptr) {
-                                cur = point.next;
-                                flag = true;
-                            }
-                        }
-                        break;
-                    } else {
-                        TreeNode *lastCur = nullptr;
-                        for (auto point: cur->pointers) {
-                            if (point.val == value && point.next != nullptr) {
-                                lastCur = point.next;
-                                flag = true;
-                                k++;
-                            }
-                        }
-                        if (k == 2) {
-                            cur = lastCur;
-                            break;
-                        }
-                    }
-                }
+            string value = cur->pointers[i].val;
+            if (val < value) {
+                if (cur->pointers[i].next != nullptr) cur = cur->pointers[i].next;
+                else break;
+                i = -1;
+                flag = true;
+            } else if (val > value && i == cur->pointers.size() - 1) {
+                if (cur->pointers[i].next != nullptr) cur = cur->pointers[i].next;
+                else break;
+                i = -1;
+                flag = true;
+            } else if (val > value && val < cur->pointers[i + 1].val) {
+                if (cur->pointers[i].next != nullptr) cur = cur->pointers[i + 1].next;
+                else break;
+                i = -1;
+                flag = true;
             }
         }
 
@@ -326,9 +287,6 @@ public:
             myQueue.pop();
 
             for (auto value: node.values) {
-                if (value.val == "l"){
-                    cout << 123 << endl;
-                }
                 if (value.val != val) tree->add(value.val, value.translate);
             }
 
@@ -347,7 +305,7 @@ public:
 
         queue<TreeNode> myQueue;
         myQueue.push(*head);
-        int enter = head->values.size();
+        int enter = 1;
         int cnt = 0;
 
         queue<TreeNode> member;

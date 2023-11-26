@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <chrono>
 #include "BinarySerachTree.cpp"
 #include "BinaryFile.cpp"
 
@@ -19,8 +20,7 @@ int main() {
     BinarySearchTree *tree = new BinarySearchTree();
     binaryFile.makeSelect(nameFile, *tree);
 
-    cout << tree->get("Blue") << endl;
-
+    cout << tree->get("Win") << endl;
 
 //    tree->add("cat", "кот");
 //    tree->add("base", "база");
@@ -38,7 +38,6 @@ int main() {
     //tree->remove("cat");
 
     //tree->printTree();
-
 
     return 1;
 

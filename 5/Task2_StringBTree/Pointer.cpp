@@ -21,5 +21,10 @@ public:
 
     Pointer(){}
 
+    // Перегрузка оператора < для сравнения объектов
+    bool operator<(const Pointer& other) const {
+        return val < other.val;
+    }
+
 
 };
