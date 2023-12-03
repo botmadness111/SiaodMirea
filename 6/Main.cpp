@@ -21,12 +21,14 @@ int main() {
     graph.add("2", "4", 6);
     graph.add("3", "5", 8);
 
-    cout << graph.getMinPathCost("3", "6") << endl;
+    //cout << graph.getMinPathCost("3", "6") << endl;
     //graph.printMinPath("3", "6");
 
     //graph.print();
 
     //cout << graph.getEccentricity("1") << endl;
+
+    graph.printMinPath("1", "4");
 
 
     return 0;

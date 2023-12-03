@@ -1,4 +1,6 @@
 #include <iostream>
+#include <utility>
+#include "MyNode.cpp"
 
 
 using namespace std;
@@ -34,7 +36,6 @@ public:
                 for (auto item: (*bdPath)[key]) {
                     if (val == item) {
                         cout << (*bdCost)[key + val] << "  ";
-                        //cout << 1 << " ";
                         flag = false;
                         break;
                     }
@@ -75,26 +76,30 @@ public:
     }
 
     void printMinPath(const string &X, const string &Y) {
-        vector<int> costs;
-        vector<vector<int>> paths;
+        vector<MyNode> costs;
 
         for (int k = 0; k < cnt; k++) {
-            if (keys[k] != X) costs.push_back(INF);
-            else costs.push_back(0);
+            if (keys[k] != X) {
+                MyNode *node = new MyNode(nullptr, keys[k], INF);
+                costs.push_back(*node);
+            } else {
+                MyNode *node = new MyNode(nullptr, keys[k], 0);
+                costs.push_back(*node);
+            }
 
         }
 
-        vector<int> costsTmp;
+        vector<MyNode> costsTmp;
         for (int i = 0; i < cnt; i++) {
 
             costsTmp.clear();
-            for (auto val: costs) {
-                costsTmp.push_back(val);
+            for (auto node: costs) {
+                costsTmp.push_back(node);
             }
 
             for (int index = 0; index < cnt; index++) {
 
-                int cost = costs[index];
+                int cost = costs[index].value;
 
                 if (cost != INF) {
                     string x = keys[index];
@@ -104,7 +109,11 @@ public:
                         int nextCost = (*bdCost)[x + y];
 
                         int indexIntoCosts = getIndexIntoCosts(y);
-                        costsTmp[indexIntoCosts] = min(cost + nextCost, costsTmp[indexIntoCosts]); //new or current
+                        if (cost + nextCost < costsTmp[indexIntoCosts].value) { //new or current
+                            MyNode *newNode = new MyNode(&costs[index], costsTmp[indexIntoCosts].key, cost + nextCost);
+                            costsTmp[indexIntoCosts] = *newNode;
+                        }
+
                     }
                 }
             }
@@ -112,9 +121,24 @@ public:
             for (int j = 0; j < costsTmp.size(); j++) {
                 costs[j] = costsTmp[j];
             }
-            paths.push_back(costs);
         }
 
+        vector<string> array;
+        for (auto node: costs) {
+            if (node.key == Y) {
+                while (node.past != nullptr) {
+                    array.push_back(node.key);
+                    node = *node.past;
+                }
+                break;
+            }
+        }
+        array.push_back(X);
+        std::reverse(array.begin(), array.end());
+        cout << "Path is: ";
+        for (const auto& key: array){
+            cout << key << " ";
+        }
 
     };
 
