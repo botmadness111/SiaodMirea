@@ -5,6 +5,8 @@ using namespace std;
 
 class Solution {
 public:
+    int kOper = 0;
+public:
     vector<string> createBoard(int n) {
         vector<string> board;
 
@@ -18,14 +20,17 @@ public:
 
     bool isSafe(vector<string>& board, int i, int j, int n) {
         for (int x = i - 1; x >= 0; x--) {
+            kOper++;
             if (board[x][j] == 'Q') return false;
         }
 
         for (int x = i - 1, y = j - 1; (x >= 0 && y >= 0); x--, y--) {
+            kOper++;
             if (board[x][y] == 'Q') return false;
         }
 
         for (int x = i - 1, y = j + 1; (x >= 0 && y < n); x--, y++) {
+            kOper++;
             if (board[x][y] == 'Q') return false;
         }
 
@@ -48,6 +53,7 @@ public:
 
         bool flag = false;
         for (int column = 0; column < n; column++) {
+            kOper++;
             if (placeQueen(board, row, column, n)) {
                 if (!solve(board, row + 1, n, ans)) {
                     board[row][column] = '.';
@@ -75,7 +81,7 @@ public:
 
 int main() {
     Solution solution;
-    int n = 4; // Установите нужный размер доски
+    int n = 8; // размер доски
     vector<vector<string>> result = solution.solveNQueens(n);
 
     // Вывод результатов
@@ -86,5 +92,6 @@ int main() {
         cout << "---------------------" << endl;
     }
 
+    cout << "Count of operations: " << solution.kOper << endl;
     return 0;
 }
